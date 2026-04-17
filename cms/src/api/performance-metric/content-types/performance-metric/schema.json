@@ -1,0 +1,18 @@
+{
+  "kind": "singleType",
+  "collectionName": "performance_metric",
+  "info": {
+    "singularName": "performance-metric",
+    "pluralName": "performance-metrics",
+    "displayName": "Performance Metric"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "cumulativeReturn": { "type": "string", "required": true },
+    "annualReturn": { "type": "string", "required": true },
+    "sharpeRatio": { "type": "string", "required": true },
+    "maxDrawdown": { "type": "string", "required": true }
+  }
+}

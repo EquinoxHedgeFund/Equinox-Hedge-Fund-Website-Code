@@ -1,8 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import router from './router'
+import i18n from './locales'
 import './assets/main.css'
-import { fadeInDirective } from './directives/fadeIn'
 
-const app = createApp(App)
-app.directive('fade-in', fadeInDirective)
-app.mount('#app')
+createApp(App).use(router).use(i18n).mount('#app')

@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "monthly_updates",
+  "info": {
+    "singularName": "monthly-update",
+    "pluralName": "monthly-updates",
+    "displayName": "Monthly Update"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "month": { "type": "string", "required": true },
+    "nav": { "type": "string" },
+    "comment": { "type": "text" },
+    "commentEn": { "type": "text" }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "reports",
+  "info": {
+    "singularName": "report",
+    "pluralName": "reports",
+    "displayName": "Report"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "titleEn": { "type": "string" },
+    "date": { "type": "date", "required": true },
+    "category": { "type": "string", "required": true },
+    "author": { "type": "string" },
+    "summary": { "type": "text" },
+    "summaryEn": { "type": "text" },
+    "content": { "type": "richtext" },
+    "contentEn": { "type": "richtext" }
+  }
+}

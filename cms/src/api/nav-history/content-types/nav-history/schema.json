@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "nav_histories",
+  "info": {
+    "singularName": "nav-history",
+    "pluralName": "nav-histories",
+    "displayName": "NAV History"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "month": { "type": "string", "required": true },
+    "nav": { "type": "decimal", "required": true },
+    "monthlyReturn": { "type": "decimal" },
+    "cumulativeReturn": { "type": "decimal" }
+  }
+}

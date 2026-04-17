@@ -1,47 +1,53 @@
 <script setup>
-import { useScroll } from '../composables/useScroll'
-import { useMobileMenu } from '../composables/useMobileMenu'
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
-const { scrolled } = useScroll()
-const { isOpen, toggle, close } = useMobileMenu()
-const navbarRef = ref(null)
+const { t, locale } = useI18n()
+const route = useRoute()
+const isOpen = ref(false)
 
 const navLinks = [
-  { href: '#overview', label: '关于我们' },
-  { href: '#mission', label: '使命愿景' },
-  { href: '#services', label: '研究方向' },
-  { href: '#apply', label: '加入我们' },
+  { path: '/', labelKey: 'nav.home' },
+  { path: '/macro', labelKey: 'nav.macro' },
+  { path: '/quant', labelKey: 'nav.quant' },
+  { path: '/about', labelKey: 'nav.about' },
 ]
 
-function scrollToSection(href) {
-  close()
-  const target = document.querySelector(href)
-  if (target) {
-    const offset = navbarRef.value ? navbarRef.value.offsetHeight + 20 : 80
-    const top = target.getBoundingClientRect().top + window.pageYOffset - offset
-    window.scrollTo({ top, behavior: 'smooth' })
-  }
+function toggle() { isOpen.value = !isOpen.value }
+function close() { isOpen.value = false }
+
+function switchLang() {
+  locale.value = locale.value === 'zh' ? 'en' : 'zh'
+  localStorage.setItem('lang', locale.value)
 }
 </script>
 
 <template>
-  <nav ref="navbarRef" class="navbar" :class="{ scrolled }">
+  <nav class="navbar">
     <div class="nav-container">
-      <a href="#" class="nav-logo">
-        <img src="/logo.jpg" alt="Equinox Hedge Fund" class="nav-logo-img">
+      <router-link to="/" class="nav-logo" @click="close">
+        <img src="/logo.jpg" alt="Equinox" class="nav-logo-img">
         <span>Equinox Hedge Fund</span>
-      </a>
+      </router-link>
       <ul class="nav-links" :class="{ active: isOpen }">
-        <li v-for="link in navLinks" :key="link.href">
-          <a :href="link.href" @click.prevent="scrollToSection(link.href)">{{ link.label }}</a>
+        <li v-for="link in navLinks" :key="link.path">
+          <router-link :to="link.path" :class="{ active: route.path === link.path }" @click="close">
+            {{ t(link.labelKey) }}
+          </router-link>
+        </li>
+        <li class="lang-switch-desktop">
+          <button class="lang-btn" @click="switchLang">{{ locale === 'zh' ? 'EN' : '中' }}</button>
         </li>
       </ul>
-      <button class="nav-toggle" :class="{ active: isOpen }" aria-label="菜单" @click="toggle">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+      <div class="nav-right-mobile">
+        <button class="lang-btn" @click="switchLang">{{ locale === 'zh' ? 'EN' : '中' }}</button>
+        <button class="nav-toggle" :class="{ active: isOpen }" aria-label="菜单" @click="toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
     </div>
   </nav>
 </template>
@@ -53,21 +59,15 @@ function scrollToSection(href) {
   left: 0;
   width: 100%;
   z-index: 1000;
-  padding: 20px 0;
-  transition: background-color 0.4s ease, padding 0.4s ease;
-}
-
-.navbar.scrolled {
-  background-color: rgba(10, 10, 10, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 14px 0;
-  box-shadow: 0 1px 20px rgba(0, 0, 0, 0.1);
+  background: var(--color-bg);
+  border-bottom: 0.5px solid var(--color-border);
 }
 
 .nav-container {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 24px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -77,52 +77,69 @@ function scrollToSection(href) {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #fff;
+  color: var(--color-text);
 }
 
 .nav-logo-img {
-  width: 36px;
-  height: 36px;
-  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
   object-fit: cover;
 }
 
 .nav-logo span {
-  font-size: 1.2rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .nav-links {
   display: flex;
-  gap: 36px;
+  gap: 32px;
+  align-items: center;
 }
 
 .nav-links a {
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 0.9rem;
-  font-weight: 400;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
   letter-spacing: 0.02em;
-  position: relative;
+  transition: color var(--transition);
 }
 
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 1.5px;
-  background: #fff;
-  transition: width var(--transition);
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--color-text);
 }
 
-.nav-links a:hover {
-  color: #fff;
+.lang-btn {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 4px 12px;
+  border: 0.5px solid var(--color-border);
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: all var(--transition);
 }
 
-.nav-links a:hover::after {
-  width: 100%;
+.lang-btn:hover {
+  background: var(--color-tag-bg);
+  color: var(--color-text);
+}
+
+.lang-switch-desktop {
+  display: flex;
+  align-items: center;
+}
+
+.nav-right-mobile {
+  display: none;
+  align-items: center;
+  gap: 12px;
 }
 
 .nav-toggle {
@@ -137,20 +154,29 @@ function scrollToSection(href) {
 
 .nav-toggle span {
   display: block;
-  width: 24px;
-  height: 2px;
-  background: #fff;
+  width: 22px;
+  height: 1.5px;
+  background: var(--color-text);
   transition: var(--transition);
 }
 
 @media (max-width: 768px) {
+  .lang-switch-desktop {
+    display: none;
+  }
+
+  .nav-right-mobile {
+    display: flex;
+  }
+
   .nav-links {
     display: none;
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
-    background: rgba(10, 10, 10, 0.98);
+    background: var(--color-bg);
+    border-bottom: 0.5px solid var(--color-border);
     flex-direction: column;
     padding: 20px 24px;
     gap: 16px;
@@ -165,7 +191,7 @@ function scrollToSection(href) {
   }
 
   .nav-toggle.active span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
+    transform: rotate(45deg) translate(4px, 4px);
   }
 
   .nav-toggle.active span:nth-child(2) {
@@ -173,7 +199,7 @@ function scrollToSection(href) {
   }
 
   .nav-toggle.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(5px, -5px);
+    transform: rotate(-45deg) translate(4px, -4px);
   }
 }
 </style>

@@ -1,29 +1,21 @@
 <script setup>
-const navLinks = [
-  { href: '#overview', label: '关于我们' },
-  { href: '#mission', label: '使命愿景' },
-  { href: '#services', label: '研究方向' },
-  { href: '#apply', label: '加入我们' },
-]
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 </script>
 
 <template>
   <footer class="footer">
     <div class="container">
-      <div class="footer-content">
-        <div class="footer-brand">
-          <span class="footer-logo">
-            <img src="/logo.jpg" alt="Equinox Hedge Fund" class="footer-logo-img">
-            Equinox Hedge Fund
-          </span>
-          <p>大学生主导的量化投资研究团队</p>
-        </div>
-        <div class="footer-links">
-          <a v-for="link in navLinks" :key="link.href" :href="link.href">{{ link.label }}</a>
-        </div>
+      <div class="footer-main">
+        <router-link to="/" class="footer-brand">
+          <img src="/logo.jpg" alt="Equinox" class="footer-logo-img">
+          <span>Equinox Hedge Fund</span>
+        </router-link>
+        <p class="footer-desc">Student-Led Hedge Fund · Greater China</p>
+        <a href="mailto:equinox_hf@outlook.com" class="footer-email">equinox_hf@outlook.com</a>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2025 Equinox Hedge Fund. All rights reserved.</p>
+        <p>{{ t('footer.copyright') }}</p>
       </div>
     </div>
   </footer>
@@ -31,68 +23,60 @@ const navLinks = [
 
 <style scoped>
 .footer {
-  background: var(--color-bg-dark);
-  color: rgba(255, 255, 255, 0.5);
-  padding: 60px 0 30px;
+  border-top: 0.5px solid var(--color-border);
+  padding: 48px 0 24px;
 }
 
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding-bottom: 40px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+.footer-main {
+  text-align: center;
+  padding-bottom: 32px;
+  border-bottom: 0.5px solid var(--color-border);
 }
 
-.footer-logo {
-  display: flex;
+.footer-brand {
+  display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #fff;
   margin-bottom: 8px;
+  color: var(--color-text);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .footer-logo-img {
-  width: 30px;
-  height: 30px;
-  border-radius: 5px;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
   object-fit: cover;
 }
 
-.footer-brand p {
+.footer-desc {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-bottom: 24px;
+}
+
+.footer-email {
+  display: inline-block;
   font-size: 0.85rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.01em;
 }
 
-.footer-links {
-  display: flex;
-  gap: 28px;
-}
-
-.footer-links a {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.5);
-  transition: color var(--transition);
-}
-
-.footer-links a:hover {
-  color: #fff;
+.footer-email:hover {
+  color: var(--color-text);
 }
 
 .footer-bottom {
-  padding-top: 24px;
+  padding-top: 20px;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
 }
 
 @media (max-width: 768px) {
-  .footer-content {
-    flex-direction: column;
-    gap: 24px;
-  }
-
-  .footer-links {
+  .footer-nav {
     flex-wrap: wrap;
     gap: 16px;
   }
