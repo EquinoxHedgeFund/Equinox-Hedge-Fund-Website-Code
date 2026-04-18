@@ -10,7 +10,7 @@ const { teamMembers } = useTeam()
 
 <template>
   <div class="page-banner">
-    <img src="/hero-finance.jpg" alt="About Us">
+    <img src="/hero-finance.jpg" alt="About Us" loading="lazy">
     <div class="page-banner-overlay"></div>
     <div class="page-banner-content">
       <h1>{{ t('about.title') }}</h1>

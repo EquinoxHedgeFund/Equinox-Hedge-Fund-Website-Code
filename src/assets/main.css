@@ -3,7 +3,7 @@
     --color-bg-card: #E8E5E0;
     --color-bg-white: #FFFFFF;
     --color-text: #111111;
-    --color-text-muted: #777777;
+    --color-text-muted: #666666;
     --color-text-strong: #444444;
     --color-border: #C8C4BC;
     --color-tag-bg: #E2DFD9;
@@ -34,6 +34,13 @@ body {
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+a:focus-visible,
+button:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 2px;
+    border-radius: 2px;
 }
 
 a {

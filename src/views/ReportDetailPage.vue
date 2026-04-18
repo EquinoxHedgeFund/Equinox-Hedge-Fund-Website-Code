@@ -1,25 +1,28 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { marked } from 'marked'
 import { useReports } from '../composables/useReports'
 import { useScrollReveal } from '../composables/useScrollReveal'
 
 const route = useRoute()
-const router = useRouter()
 const { locale } = useI18n()
 useScrollReveal()
 
 const { fetchReportById } = useReports()
 const report = ref(null)
+const loading = ref(true)
 
 const displayTitle = computed(() =>
   report.value ? (locale.value === 'en' ? (report.value.titleEn || report.value.title) : report.value.title) : ''
 )
 
-const displayContent = computed(() =>
-  report.value ? (locale.value === 'en' ? (report.value.contentEn || report.value.content) : report.value.content) : ''
-)
+const displayContent = computed(() => {
+  if (!report.value) return ''
+  const raw = locale.value === 'en' ? (report.value.contentEn || report.value.content) : report.value.content
+  return marked.parse(raw || '')
+})
 
 const displaySummary = computed(() =>
   report.value ? (locale.value === 'en' ? (report.value.summaryEn || report.value.summary) : report.value.summary) : ''
@@ -27,13 +30,20 @@ const displaySummary = computed(() =>
 
 onMounted(async () => {
   report.value = await fetchReportById(route.params.id)
+  loading.value = false
 })
 </script>
 
 <template>
-  <div v-if="report" class="report-detail">
+  <div v-if="loading" class="loading-state">
+    <div class="container">
+      <div class="loading-spinner"></div>
+    </div>
+  </div>
+
+  <div v-else-if="report" class="report-detail">
     <div class="page-banner">
-      <img src="/hero-finance.jpg" alt="Report">
+      <img src="/hero-finance.jpg" alt="Report" loading="lazy">
       <div class="page-banner-overlay"></div>
       <div class="page-banner-content">
         <span class="report-tag">{{ report.category }}</span>
@@ -187,5 +197,26 @@ onMounted(async () => {
   font-size: 1.1rem;
   color: var(--color-text-muted);
   margin-bottom: 24px;
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40vh;
+  padding-top: 80px;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-text);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 </style>

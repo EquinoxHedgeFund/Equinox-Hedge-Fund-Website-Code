@@ -6,7 +6,7 @@ import { useScrollReveal } from '../composables/useScrollReveal'
 
 const { t, locale } = useI18n()
 useScrollReveal()
-const { reports } = useReports()
+const { reports, loading } = useReports()
 
 const categories = computed(() => [
   t('macro.all'),
@@ -25,7 +25,7 @@ const filteredReports = computed(() => {
 
 <template>
   <div class="page-banner">
-    <img src="/hero-finance.jpg" alt="Macro Research">
+    <img src="/hero-finance.jpg" alt="Macro Research" loading="lazy">
     <div class="page-banner-overlay"></div>
     <div class="page-banner-content">
       <h1>{{ t('macro.title') }}</h1>
@@ -47,7 +47,15 @@ const filteredReports = computed(() => {
         </button>
       </div>
 
-      <div class="report-grid">
+      <div v-if="loading" class="report-grid">
+        <div v-for="i in 3" :key="i" class="skeleton-card">
+          <div class="skeleton skeleton-tag"></div>
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-text short"></div>
+        </div>
+      </div>
+      <div v-else class="report-grid">
         <div v-for="report in filteredReports" :key="report.id" class="report-card">
           <div class="report-card-top">
             <span class="report-tag">{{ report.category }}</span>
@@ -172,5 +180,32 @@ const filteredReports = computed(() => {
   .report-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Skeleton loading */
+.skeleton-card {
+  background: var(--color-bg);
+  border: 0.5px solid var(--color-border);
+  border-radius: 10px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeleton {
+  background: var(--color-tag-bg);
+  border-radius: 4px;
+  animation: shimmer 1.5s ease infinite;
+}
+
+.skeleton-tag { width: 60px; height: 16px; }
+.skeleton-title { width: 80%; height: 18px; }
+.skeleton-text { width: 100%; height: 14px; }
+.skeleton-text.short { width: 60%; }
+
+@keyframes shimmer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 }
 </style>

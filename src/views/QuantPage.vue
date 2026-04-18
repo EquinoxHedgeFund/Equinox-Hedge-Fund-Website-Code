@@ -96,7 +96,7 @@ onMounted(() => { chartReady.value = true })
 
 <template>
   <div class="page-banner">
-    <img src="/hero-finance.jpg" alt="Quantitative Strategy">
+    <img src="/hero-finance.jpg" alt="Quantitative Strategy" loading="lazy">
     <div class="page-banner-overlay"></div>
     <div class="page-banner-content">
       <h1>{{ t('quant.title') }}</h1>

@@ -7,8 +7,8 @@ import { useScrollReveal } from '../composables/useScrollReveal'
 
 const { t, locale } = useI18n()
 useScrollReveal()
-const { reports } = useReports()
-const { metrics } = useMetrics()
+const { reports, loading: reportsLoading } = useReports()
+const { metrics, loading: metricsLoading } = useMetrics()
 
 const latestReports = computed(() => reports.value.slice(0, 3))
 const snapshotMetrics = computed(() => {
@@ -68,7 +68,15 @@ const snapshotMetrics = computed(() => {
         <h2 class="section-title">{{ t('home.latestReports') }}</h2>
         <router-link to="/macro" class="view-all">{{ t('home.viewAll') }}</router-link>
       </div>
-      <div class="report-grid">
+      <div v-if="reportsLoading" class="report-grid">
+        <div v-for="i in 3" :key="i" class="skeleton-card">
+          <div class="skeleton skeleton-tag"></div>
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-text short"></div>
+        </div>
+      </div>
+      <div v-else class="report-grid">
         <div v-for="report in latestReports" :key="report.id" class="report-card">
           <span class="report-tag">{{ report.category }}</span>
           <h3>{{ locale === 'en' ? (report.titleEn || report.title) : report.title }}</h3>
@@ -87,7 +95,13 @@ const snapshotMetrics = computed(() => {
         <h2 class="section-title">{{ t('home.performance') }}</h2>
         <router-link to="/quant" class="view-all">{{ t('home.viewFullPerformance') }}</router-link>
       </div>
-      <div class="snapshot-grid">
+      <div v-if="metricsLoading" class="snapshot-grid">
+        <div v-for="i in 3" :key="i" class="skeleton-card center">
+          <div class="skeleton skeleton-label"></div>
+          <div class="skeleton skeleton-value"></div>
+        </div>
+      </div>
+      <div v-else class="snapshot-grid">
         <div v-for="m in snapshotMetrics" :key="m.label" class="snapshot-card">
           <span class="snapshot-label">{{ m.display || m.label }}</span>
           <span class="snapshot-value">{{ m.value }}</span>
@@ -360,5 +374,40 @@ const snapshotMetrics = computed(() => {
     gap: 8px;
     align-items: flex-start;
   }
+}
+
+/* Skeleton loading */
+.skeleton-card {
+  background: var(--color-bg);
+  border: 0.5px solid var(--color-border);
+  border-radius: 10px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeleton-card.center {
+  text-align: center;
+  align-items: center;
+  padding: 32px 24px;
+}
+
+.skeleton {
+  background: var(--color-tag-bg);
+  border-radius: 4px;
+  animation: shimmer 1.5s ease infinite;
+}
+
+.skeleton-tag { width: 60px; height: 16px; }
+.skeleton-title { width: 80%; height: 18px; }
+.skeleton-text { width: 100%; height: 14px; }
+.skeleton-text.short { width: 60%; }
+.skeleton-label { width: 70px; height: 12px; }
+.skeleton-value { width: 60px; height: 28px; }
+
+@keyframes shimmer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 }
 </style>

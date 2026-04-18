@@ -37,11 +37,11 @@ function switchLang() {
           </router-link>
         </li>
         <li class="lang-switch-desktop">
-          <button class="lang-btn" @click="switchLang">{{ locale === 'zh' ? 'EN' : '中' }}</button>
+          <button class="lang-btn" :aria-label="locale === 'zh' ? 'Switch to English' : '切换至中文'" @click="switchLang">{{ locale === 'zh' ? 'EN' : '中' }}</button>
         </li>
       </ul>
       <div class="nav-right-mobile">
-        <button class="lang-btn" @click="switchLang">{{ locale === 'zh' ? 'EN' : '中' }}</button>
+        <button class="lang-btn" :aria-label="locale === 'zh' ? 'Switch to English' : '切换至中文'" @click="switchLang">{{ locale === 'zh' ? 'EN' : '中' }}</button>
         <button class="nav-toggle" :class="{ active: isOpen }" aria-label="菜单" @click="toggle">
           <span></span>
           <span></span>
